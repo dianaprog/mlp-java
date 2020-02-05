@@ -19,17 +19,17 @@ package multilayersperceptronlib;
 public interface TransferFunction 
 {
 	/**
-	 * Funzione di trasferimento 
-	 * @param value Valore in input
-	 * @return Valore funzione
+	 * Transfer function
+	 * @param value Input value
+	 * @return Function value
 	 */
-	public double evalute(double value);
+	double evalute(double value);
 	
 	
 	/**
-	 * Funzione derivata
-	 * @param value Valore in input
-	 * @return Valore funzione derivata
+	 * Derived function
+	 * @param value Input value
+	 * @return Derived function value
 	 */
-	public double evaluteDerivate(double value);
+	double evaluteDerivate(double value);
 }

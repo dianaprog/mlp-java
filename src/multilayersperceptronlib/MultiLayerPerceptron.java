@@ -29,11 +29,11 @@ public class MultiLayerPerceptron implements Cloneable
 
 	
 	/**
-	 * Crea una rete neuronale mlp
+	 * Create an mlp neuronal network
 	 * 
-	 * @param layers Numero di neuroni per ogni layer
-	 * @param learningRate Costante di apprendimento
-	 * @param fun Funzione di trasferimento
+	 * @param layers Number of neurons per layer
+	 * @param learningRate Learning constant
+	 * @param fun Transfer function
 	 */
 	public MultiLayerPerceptron(int[] layers, double learningRate, TransferFunction fun)
 	{
@@ -58,10 +58,10 @@ public class MultiLayerPerceptron implements Cloneable
 
 	
 	/**
-	 * Esegui la rete
+	 * Run the network
 	 * 
-	 * @param input Valori di input
-	 * @return Valori di output restituiti dalla rete
+	 * @param input Input values
+	 * @return Output values returned by the network
 	 */
 	public double[] execute(double[] input)
 	{
@@ -70,26 +70,29 @@ public class MultiLayerPerceptron implements Cloneable
 		int k;
 		double new_value;
 		
-		double output[] = new double[fLayers[fLayers.length - 1].Length];
+		double output[] = new double[fLayers[fLayers.length - 1].Length]; //создание нового посл слоя
 		
 		// Put input
-		for(i = 0; i < fLayers[0].Length; i++)
+		final Layer inputLayer = fLayers[0];
+		for(i = 0; i < inputLayer.Length; i++)
 		{
-			fLayers[0].Neurons[i].Value = input[i];
+			inputLayer.Neurons[i].Value = input[i];
 		}
 		
 		// Execute - hiddens + output
 		for(k = 1; k < fLayers.length; k++)
 		{
-			for(i = 0; i < fLayers[k].Length; i++)
+			final Layer currentLayer = fLayers[k];
+			for(i = 0; i < currentLayer.Length; i++)
 			{
 				new_value = 0.0;
-				for(j = 0; j < fLayers[k - 1].Length; j++)
-					new_value += fLayers[k].Neurons[i].Weights[j] * fLayers[k - 1].Neurons[j].Value;
+				final Layer prevLayer = fLayers[k - 1];
+				for(j = 0; j < prevLayer.Length; j++)
+					new_value += currentLayer.Neurons[i].Weights[j] * prevLayer.Neurons[j].Value;
 				
-				new_value += fLayers[k].Neurons[i].Bias;
+				new_value += currentLayer.Neurons[i].Bias;
 				
-				fLayers[k].Neurons[i].Value = fTransferFunction.evalute(new_value);
+				currentLayer.Neurons[i].Value = fTransferFunction.evalute(new_value);
 			}
 		}
 		
@@ -106,25 +109,25 @@ public class MultiLayerPerceptron implements Cloneable
 	
 	
 	/**
-	 * Algoritmo di backpropagation per il learning assistito
-	 * (Versione multi threads)
-	 * 
-	 * Convergenza non garantita e molto lenta; utilizzare come criteri
-	 * di stop una norma tra gli errori precedente e corrente, ed un
-	 * numero massimo di iterazioni.
-	 * 
+	 * Backpropagation algorithm for assisted learning
+	 * (Multi threads version)
+	 *
+	 * Unsecured and very slow convergence; use as criteria
+	 * stop a norm between the previous and current errors, and a
+	 * maximum number of iterations.
+	 *
 	 * Wikipedia:
-	 * 	The training data is broken up into equally large batches for each 
-	 * 	of the threads. Each thread executes the forward and backward propagations. 
-	 * 	The weight and threshold deltas are summed for each of the threads. 
-	 * 	At the end of each iteration all threads must pause briefly for the 
-	 * 	weight and threshold deltas to be summed and applied to the neural network. 
-	 * 	This process continues for each iteration. 
+	 * The training data is broken up into equally large batches for each
+	 * of the threads. Each thread executes the forward and backward propagations.
+	 * The weight and threshold deltas are summed for each of the threads.
+	 * At the end of each iteration all threads must pause briefly for the
+	 * weight and threshold deltas to be summed and applied to the neural network.
+	 * This process continues for each iteration.
 	 * 
-	 * @param input Valori in input
-	 * @param output Valori di output atteso
-	 * @param nthread Numero di thread da spawnare per il learning
-	 * @return Errore delta tra output generato ed output atteso
+	 * @param input Input values
+	 * @param output Expected output values
+	 * @param nthread Number of threads to spawn for learning
+	 * @return Delta error between generated output and expected output
 	 */
 	public double backPropagateMultiThread(double[] input, double[] output, int nthread)
 	{
@@ -134,16 +137,16 @@ public class MultiLayerPerceptron implements Cloneable
 	
 	
 	/**
-	 * Algoritmo di backpropagation per il learning assistito
-	 * (Versione single thread)
+	 * Backpropagation algorithm for assisted learning
+	 * (Single thread version)
+	 *
+	 * Unsecured and very slow convergence; use as criteria
+	 * stop a norm between the previous and current errors, and a
+	 * maximum number of iterations.
 	 * 
-	 * Convergenza non garantita e molto lenta; utilizzare come criteri
-	 * di stop una norma tra gli errori precedente e corrente, ed un
-	 * numero massimo di iterazioni.
-	 * 
-	 * @param input Valori in input (scalati tra 0 ed 1)
-	 * @param output Valori di output atteso (scalati tra 0 ed 1)
-	 * @return Errore delta tra output generato ed output atteso
+	 * @param input Input values (scaled between 0 and 1)
+	 * @param output Expected output values (scaled between 0 and 1)
+	 * @return Delta error between generated output and expected output
 	 */
 	public double backPropagate(double[] input, double[] output)
 	{
@@ -165,21 +168,21 @@ public class MultiLayerPerceptron implements Cloneable
 		
 		for(k = fLayers.length - 2; k >= 0; k--)
 		{
-			// Calcolo l'errore dello strato corrente e ricalcolo i delta
+			// I calculate the error of the current layer and I recalculate the deltas
 			for(i = 0; i < fLayers[k].Length; i++)
 			{
 				error = 0.0;
 				for(j = 0; j < fLayers[k + 1].Length; j++)
 					error += fLayers[k + 1].Neurons[j].Delta * fLayers[k + 1].Neurons[j].Weights[i];
 								
-				fLayers[k].Neurons[i].Delta = error * fTransferFunction.evaluteDerivate(fLayers[k].Neurons[i].Value);				
+				fLayers[k].Neurons[i].Delta = error * fTransferFunction.evaluteDerivate(fLayers[k].Neurons[i].Value);
 			}
-			
-			// Aggiorno i pesi dello strato successivo
+
+			// Update the weights of the next layer
 			for(i = 0; i < fLayers[k + 1].Length; i++)
 			{
 				for(j = 0; j < fLayers[k].Length; j++)
-					fLayers[k + 1].Neurons[i].Weights[j] += fLearningRate * fLayers[k + 1].Neurons[i].Delta * 
+					fLayers[k + 1].Neurons[i].Weights[j] += fLearningRate * fLayers[k + 1].Neurons[i].Delta *
 							fLayers[k].Neurons[j].Value;
 				fLayers[k + 1].Neurons[i].Bias += fLearningRate * fLayers[k + 1].Neurons[i].Delta;
 			}
@@ -201,10 +204,10 @@ public class MultiLayerPerceptron implements Cloneable
 	
 	
 	/**
-	 * Salva una rete MLP su file
+	 * Save an MLP network to file
 	 * 
-	 * @param path Path nel quale salvare la rete MLP
-	 * @return true se salvata correttamente
+	 * @param path Path in which to save the MLP network
+	 * @return true if saved correctly
 	 */
 	public boolean save(String path)
 	{
@@ -225,9 +228,9 @@ public class MultiLayerPerceptron implements Cloneable
 	
 	
 	/**
-	 * Carica una rete MLP da file
-	 * @param path Path dal quale caricare la rete MLP
-	 * @return Rete MLP caricata dal file o null
+	 * Upload an MLP network from file
+	 * @param path Path from which to load the MLP network
+	 * @return MLP network loaded from file or null
 	 */
 	public static MultiLayerPerceptron load(String path)
 	{
@@ -251,7 +254,7 @@ public class MultiLayerPerceptron implements Cloneable
 	
 
 	/**
-	 * @return Costante di apprendimento
+	 * @return Learning constant
 	 */
 	public double getLearningRate()
 	{
@@ -270,9 +273,9 @@ public class MultiLayerPerceptron implements Cloneable
 	
 	
 	/**
-	 * Imposta una nuova funzione di trasferimento
+	 * Set up a new transfer feature
 	 * 
-	 * @param fun Funzione di trasferimento
+	 * @param fun Transfer function
 	 */
 	public void setTransferFunction(TransferFunction fun)
 	{
@@ -282,7 +285,7 @@ public class MultiLayerPerceptron implements Cloneable
 	
 	
 	/**
-	 * @return Dimensione layer di input
+	 * @return Input layer size
 	 */
 	public int getInputLayerSize()
 	{
@@ -291,7 +294,7 @@ public class MultiLayerPerceptron implements Cloneable
 	
 	
 	/**
-	 * @return Dimensione layer di output
+	 * @return Output layer size
 	 */
 	public int getOutputLayerSize()
 	{

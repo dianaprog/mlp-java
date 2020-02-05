@@ -16,18 +16,8 @@
  */
 package multilayersperceptronlib.test;
 
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
-
 import multilayersperceptronlib.MultiLayerPerceptron;
-import multilayersperceptronlib.transferfunctions.HeavysideTransfer;
-import multilayersperceptronlib.transferfunctions.HyperbolicTransfer;
 import multilayersperceptronlib.transferfunctions.SigmoidalTransfer;
-import multilayersperceptronlib.utility.ImageProcessing;
 import multilayersperceptronlib.utility.ImageProcessingBW;
 
 
@@ -117,7 +107,7 @@ public class PatternRecognitionTest
 				max = i;
 			}
 		
-		System.out.println("Il valore massimo e' "+output[max]+" pattern "+(max+1));
+		System.out.println("The maximum value is' "+output[max]+" pattern "+(max+1));
 		
 		/*
 		for(int j = 0; j < npatt; j++)

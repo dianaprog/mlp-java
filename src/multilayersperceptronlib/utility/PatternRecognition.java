@@ -18,7 +18,6 @@ package multilayersperceptronlib.utility;
 
 import multilayersperceptronlib.MultiLayerPerceptron;
 import multilayersperceptronlib.TransferFunction;
-import multilayersperceptronlib.transferfunctions.SigmoidalTransfer;
 
 public class PatternRecognition 
 {
@@ -29,10 +28,10 @@ public class PatternRecognition
 	
 	/**
 	 * 
-	 * @param imgSize Dimensione immagine
-	 * @param nPatterns Numero di patterns
-	 * @param learningRate Costante di apprendimento
-	 * @param transferFun Funzione di trasferimento
+	 * @param imgSize Image size
+	 * @param nPatterns Number of patterns
+	 * @param learningRate Learning constant
+	 * @param transferFun Transfer function
 	 */
 	public PatternRecognition(int imgSize, int nPatterns, double learningRate, TransferFunction transferFun)
 	{
@@ -45,10 +44,10 @@ public class PatternRecognition
 	
 	
 	/**
-	 * Riconoscere un pattern in un immagine
+	 * Recognize a pattern in an image
 	 * 
-	 * @param imgPath Path dell'immagine da riconoscere
-	 * @return Numero del pattern riconosciuto
+	 * @param imgPath Path of the image to be recognized
+	 * @return Recognized pattern number
 	 */
 	public int recognize(String imgPath)
 	{
@@ -69,9 +68,9 @@ public class PatternRecognition
 	
 
 	/**
-	 * Riconoscere un pattern in una bitmap
+	 * Recognize a pattern in a bitmap
 	 * 
-	 * @return Numero del pattern riconosciuto
+	 * @return Recognized pattern number
 	 */
 	public int recognize(boolean[][] bitMap, int sizeX, int sizeY)
 	{
@@ -113,11 +112,11 @@ public class PatternRecognition
 	}
 	
 	/**
-	 * Step di learning, backpropaga un solo sample, passato come parametro
+	 * Learning step, backpropagate a single sample, passed as a parameter
 	 * 
-	 * @param input Input normalizzato in un double[]
-	 * @param output Identificatore del pattern
-	 * @return Errore del passo
+	 * @param input Normalized input in a double []
+	 * @param output Pattern identifier
+	 * @return Pitch error
 	 */
 	public double learningStep(double[] input, int output)
 	{
@@ -137,12 +136,12 @@ public class PatternRecognition
 	}
 	
 	/**
-	 * Step di learning, backpropaga tutti i sample di tutti i patterns 
-	 * una volta
+	 * Learning step, backpropa all samples of all patterns
+	 * one time
 	 * 
-	 * @param dir Cartella dove trovare le cartelle coi sample
-	 * @param imagesPerPattern Numero di samples per cartella
-	 * @return Errore relativo del passo
+	 * @param dir Folder where to find folders with samples
+	 * @param imagesPerPattern Number of samples per folder
+	 * @return Relative step error
 	 */
 	public double learningStep(String dir, int imagesPerPattern)
 	{
